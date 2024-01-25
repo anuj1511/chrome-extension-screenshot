@@ -11,7 +11,7 @@ function takeScreenshot() {
 
 function openEditor() {
     chrome.tabs.create({
-        url: chrome.runtime.getURL("editor.html")
+        url: chrome.runtime.getURL("editor/editor.html")
     });
 }
 
