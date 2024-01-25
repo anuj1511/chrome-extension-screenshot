@@ -78,26 +78,26 @@ downloadButton.addEventListener("click", (e) => {
   downloadButton.setAttribute("href", imgSrc);
 });
 
-fileInput.onchange = () => {
-  //The FileReader object helps tp read contents of file stored on computer
-  let reader = new FileReader();
-  //readAsDataURL read the content of input file
-  reader.readAsDataURL(fileInput.files[0]);
-  reader.onload = () => {
-    //onload is triggered after file reading operation is successfully completed
-    //set src attribute of image to the result/input file
-    image.setAttribute("src", reader.result);
-    //set filename for setting downloaded file name later
-    //initialize cropper
-    if (cropper) {
-      cropper.destroy();
-    }
-    cropper = new Cropper(image);
-    options.classList.remove("hide");
-    previewButton.classList.remove("hide");
-  };
-  fileName = fileInput.files[0].name.split(".")[0];
-};
+// fileInput.onchange = () => {
+//   //The FileReader object helps tp read contents of file stored on computer
+//   let reader = new FileReader();
+//   //readAsDataURL read the content of input file
+//   reader.readAsDataURL(fileInput.files[0]);
+//   reader.onload = () => {
+//     //onload is triggered after file reading operation is successfully completed
+//     //set src attribute of image to the result/input file
+//     image.setAttribute("src", reader.result);
+//     //set filename for setting downloaded file name later
+//     //initialize cropper
+//     if (cropper) {
+//       cropper.destroy();
+//     }
+//     cropper = new Cropper(image);
+//     options.classList.remove("hide");
+//     previewButton.classList.remove("hide");
+//   };
+//   fileName = fileInput.files[0].name.split(".")[0];
+// };
 
 document.addEventListener("DOMContentLoaded", function() {
   // Function to display the screenshot if available in local storage
