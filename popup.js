@@ -3,40 +3,41 @@ function takeScreenshot() {
 
     return new Promise((resolve, reject) => {
         chrome.tabs.captureVisibleTab({format: "png"}, function (screenshotUrl) {
-            localStorage.setItem("screenshotUrl", screenshotUrl);
-            resolve(screenshotUrl);
+            // Get the URL of the current tab
+            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                const pageUrl = tabs[0].url;
+
+                // Store both screenshotUrl and pageUrl in localStorage
+                localStorage.setItem("screenshotUrl", screenshotUrl);
+                localStorage.setItem("pageUrl", pageUrl);
+
+                resolve(screenshotUrl);
+            });
         });
     });
 }
 
 function openEditor() {
     chrome.tabs.create({
-        url: chrome.runtime.getURL("editor.html")
+        url: chrome.runtime.getURL("editor/editor.html")
     });
 }
 
 function handleClick() {
-	console.log("handle click");
-	takeScreenshot().then(openEditor).catch(function(error) {
-		console.error("Error taking screenshot:", error);
-	});
+    console.log("handle click");
+    takeScreenshot().then(openEditor).catch(function(error) {
+        console.error("Error taking screenshot:", error);
+    });
 }
 
-// Attach the evenet listener to the button
+// Attach the event listener to the button
 document.addEventListener("DOMContentLoaded", function() {
-	const screenshotBtn = document.getElementById("screenshotBtn");
-	// const openEditorBtn = document.getElementById("openEditorBtn");
-	console.log("inside");
+    const screenshotBtn = document.getElementById("screenshotBtn");
+    console.log("inside");
 
-	if(screenshotBtn) {		
-		screenshotBtn.addEventListener("click", handleClick);
-	} else {
-		console.error("Button not found");
-	}
-
-	// if(openEditorBtn) {
-	// 	openEditorBtn.addEventListener("click", openEditor);
-	// } else {
-	// 	console.error("Button not found");
-	// }
-})
+    if(screenshotBtn) {        
+        screenshotBtn.addEventListener("click", handleClick);
+    } else {
+        console.error("Button not found");
+    }
+});
