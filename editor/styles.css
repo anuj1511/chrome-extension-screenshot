@@ -16,7 +16,7 @@ h1 {
 
 .image-wrapper {
     background-color: #000;
-    width: 80%; /* Takes 80% of the screen width */
+    width: 70%; /* Takes 80% of the screen width */
     height: 80vh; /* Full height of the viewport */
     display: flex;
     justify-content: center;
@@ -32,13 +32,14 @@ h1 {
 }
 
 .sidebar {
-    width: 20%; /* Takes 20% of the screen width */
+    width: 30%; /* Takes 20% of the screen width */
     background-color: #f2f2f2;
     padding: 20px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end; /* Align content at the bottom */
+    justify-content: flex-start; /* Align content at the bottom */
+    overflow-y: auto; /* Add vertical scrollbar when content exceeds the height */
 }
 
 .input-wrapper {
