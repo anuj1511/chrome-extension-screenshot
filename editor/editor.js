@@ -9,10 +9,12 @@ document.addEventListener("DOMContentLoaded", function() {
             
 
             // Create an image element
-            const img = document.createElement("img");
+            // const img = document.createElement("img");
+            const img = document.getElementById("image");
 
             // Set the source of the image to the screenshot URL
             img.src = screenshotUrl;
+            console.log(img);
 
             // Set the onload event for the image
             img.onload = function() {
@@ -52,10 +54,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Get the image data
         const imageData = localStorage.getItem("screenshotUrl");
-        
+
         // Retrieve the pageUrl from localStorage
         // const pageUrl = localStorage.getItem("pageUrl");
         const pageUrl = "anuj"
+
         // Construct the postData object
         const postData = {
             description: imageDescription,
@@ -87,10 +90,62 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error('Error sending data:', error);
         });
     });
-});
 
-/*
-    url:
-    description:
-    imagePath: 
-*/
+    let clickEnabled = false;
+    let clickCount = 0;
+    
+    document.getElementById('enableButton').addEventListener('click', function() {
+        clickEnabled = true;
+    });
+    
+    document.getElementById('image').addEventListener('click', function(event) {
+        if (clickEnabled) {
+            clickCount++;
+            const imageRect = event.target.getBoundingClientRect();
+            const offsetX = event.clientX - imageRect.left + 10;
+            const offsetY = event.clientY - imageRect.top - 730;
+    
+            const imageWrapper = document.getElementById('imageWrapper');
+
+            const circle = document.createElement('div');
+            circle.classList.add('circle');
+            circle.innerText = clickCount;
+            circle.style.left = offsetX + 'px';
+            circle.style.top = offsetY + 'px';
+            imageWrapper.appendChild(circle);
+
+            const inputContainer = document.createElement('div');
+            inputContainer.classList.add('inputContainer');
+            inputContainer.style.left = (offsetX + 0) + 'px';
+            inputContainer.style.top = (offsetY + 0) + 'px';
+
+            imageWrapper.appendChild(inputContainer);
+
+            // Update the sidebar content
+            const sidebar = document.querySelector('.sidebar');
+
+            const inputGroup = document.createElement('div');
+            inputGroup.classList.add('input-group', 'input-group-sm', 'mb-3');
+
+            const inputGroupText = document.createElement('span');
+            inputGroupText.classList.add('input-group-text');
+            inputGroupText.textContent = clickCount;
+
+            const inputField = document.createElement('input');
+            inputField.type = 'text';
+            inputField.classList.add('form-control');
+            inputField.setAttribute('aria-label', 'Sizing example input');
+            inputField.setAttribute('aria-describedby', 'inputGroup-sizing-sm');
+            inputField.value = '';
+            inputField.placeholder = "Write about element present at " + clickCount + ".";
+
+            inputGroup.appendChild(inputGroupText);
+            inputGroup.appendChild(inputField);
+
+            // Append new content to the sidebar
+            sidebar.appendChild(inputGroup);
+        }
+    });
+    
+
+});
