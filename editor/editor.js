@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-
     const toggleButton = document.getElementById("enableButton");
-
 
     // Function to display the screenshot if available in local storage
     function displayScreenshot() {
@@ -51,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const postButton = document.getElementById("postButton");
 
     // Add event listener for post button click
-    postButton.addEventListener('click', function (event) {
+    postButton.addEventListener("click", function (event) {
         // Get the image name and description
         const imageDescription = imageDescriptionInput.value;
 
@@ -72,101 +70,103 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log(postData);
 
         // Clear the input fields after submission
-        imageDescriptionInput.value = '';
+        imageDescriptionInput.value = "";
 
-        const url = "https://guide-data.onrender.com/upload/edit/site/?url=" + pageUrl;
+        const url =
+            "https://guide-data.onrender.com/upload/edit/site/?url=" + pageUrl;
 
         // Simulate sending data to a URL (for demonstration purposes)
         // Replace the URL with your actual endpoint
         fetch(url, {
-            method: 'PATCH',
+            method: "PATCH",
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify(postData)
+            body: JSON.stringify(postData),
         })
-            .then(response => {
-                console.log('Data sent successfully');
+            .then((response) => {
+                console.log("Data sent successfully");
                 console.log("response: ", response);
 
-                alert("Demo sent successfully")
+                alert("Demo sent successfully");
 
                 // Hide the post button
-                postButton.style.display = 'none';
+                postButton.style.display = "none";
 
                 // Show the "Click Next Screenshot" button
-                const nextScreenshotButton = document.getElementById('nextScreenshotButton');
-                nextScreenshotButton.style.display = 'block';
+                const nextScreenshotButton = document.getElementById(
+                    "nextScreenshotButton"
+                );
+                nextScreenshotButton.style.display = "block";
 
-                nextScreenshotButton.addEventListener('click', function () {
+                nextScreenshotButton.addEventListener("click", function () {
                     // Handle the click event for the next screenshot button
                     // You can implement the logic for the next action here
                     window.close();
                 });
             })
-            .catch(error => {
-                console.error('Error sending data:', error);
+            .catch((error) => {
+                console.error("Error sending data:", error);
             });
     });
-
 
     let clickEnabled = false;
     let clickCount = 0;
 
-    document.getElementById('enableButton').addEventListener('click', function () {
-        if (clickEnabled) clickEnabled = false;
-        else clickEnabled = true;
-        console.log(clickEnabled);
-        toggleButtonClass();
-    });
+    document
+        .getElementById("enableButton")
+        .addEventListener("click", function () {
+            if (clickEnabled) clickEnabled = false;
+            else clickEnabled = true;
+            console.log(clickEnabled);
+            toggleButtonClass();
+        });
 
     function toggleButtonClass() {
         if (clickEnabled) {
-            toggleButton.classList.remove('btn-outline-success');
-            toggleButton.classList.add('btn-success');
+            toggleButton.classList.remove("btn-outline-success");
+            toggleButton.classList.add("btn-success");
         } else {
-            toggleButton.classList.remove('btn-success');
-            toggleButton.classList.add('btn-outline-success');
+            toggleButton.classList.remove("btn-success");
+            toggleButton.classList.add("btn-outline-success");
         }
         console.log(toggleButton);
     }
 
-
-
-    document.getElementById('image').addEventListener('click', function (event) {
+    document.getElementById("image").addEventListener("click", function (event) {
         if (clickEnabled) {
             clickCount++;
             const imageRect = event.target.getBoundingClientRect();
-            const offsetX = event.clientX - imageRect.left + 10;
-            const offsetY = event.clientY - imageRect.top - 710;
+            const offsetX = event.clientX - imageRect.left + 20;
+            const offsetY = event.clientY - imageRect.top - 660;
 
-            const imageWrapper = document.getElementById('imageWrapper');
+            const imageWrapper = document.getElementById("imageWrapper");
 
-            const circle = document.createElement('div');
-            circle.classList.add('circle');
+            const circle = document.createElement("div");
+            circle.classList.add("circle");
             circle.innerText = clickCount;
-            circle.style.left = offsetX + 'px';
-            circle.style.top = offsetY + 'px';
+            circle.style.left = offsetX + "px";
+            circle.style.top = offsetY + "px";
             imageWrapper.appendChild(circle);
 
-
             // Update the sidebar content
-            const sidebar = document.querySelector('.sidebar');
+            const sidebar = document.querySelector(".sidebar");
 
-            const inputGroup = document.createElement('div');
-            inputGroup.classList.add('input-group', 'input-group-sm', 'mb-3');
+            const inputGroup = document.createElement("div");
+            inputGroup.classList.add("input-group", "input-group-sm", "mb-3");
 
-            const inputGroupText = document.createElement('span');
-            inputGroupText.classList.add('input-group-text');
+            const inputGroupText = document.createElement("span");
+            inputGroupText.classList.add("input-group-text");
             inputGroupText.textContent = clickCount;
 
-            const inputField = document.createElement('input');
-            inputField.type = 'text';
-            inputField.classList.add('form-control');
-            inputField.setAttribute('aria-label', 'Sizing example input');
-            inputField.setAttribute('aria-describedby', 'inputGroup-sizing-sm');
-            inputField.value = '';
-            inputField.placeholder = "Write about element present at " + clickCount + ".";
+            const inputField = document.createElement("input");
+            inputField.type = "text";
+            inputField.classList.add("form-control");
+            inputField.setAttribute("aria-label", "Sizing example input");
+            inputField.setAttribute("aria-describedby", "inputGroup-sizing-sm");
+            inputField.value = "";
+            inputField.placeholder =
+                "Write about element present at " + clickCount + ".";
 
             inputGroup.appendChild(inputGroupText);
             inputGroup.appendChild(inputField);
@@ -176,4 +176,33 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    function takeScreenshot() {
+        console.log("takeScreenshot called");
+
+        return new Promise((resolve, reject) => {
+            chrome.tabs.captureVisibleTab({ format: "png" }, function (screenshotUrl) {
+                // Create a temporary anchor element
+                var link = document.createElement('a');
+                link.href = screenshotUrl;
+                link.download = 'screenshot.png';
+
+                // Append the anchor element to the document body
+                document.body.appendChild(link);
+
+                // Trigger a click event on the anchor element
+                link.click();
+
+                // Remove the anchor element from the document body
+                document.body.removeChild(link);
+
+                resolve(screenshotUrl);
+            });
+        });
+    }
+
+
+    document.getElementById("captureBtn").addEventListener("click", function () {
+        console.log("clicked");
+        takeScreenshot();
+    });
 });
