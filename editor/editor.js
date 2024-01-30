@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Retrieve the pageUrl from localStorage
         // const pageUrl = localStorage.getItem("pageUrl");
-        const pageUrl = "newUrl";
+        const pageUrl = "ti.com";
 
         // Construct the postData object
         const postData = {
@@ -178,31 +178,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function takeScreenshot() {
         console.log("takeScreenshot called");
-
+    
         return new Promise((resolve, reject) => {
-            chrome.tabs.captureVisibleTab({ format: "png" }, function (screenshotUrl) {
-                // Create a temporary anchor element
-                var link = document.createElement('a');
-                link.href = screenshotUrl;
-                link.download = 'screenshot.png';
-
-                // Append the anchor element to the document body
-                document.body.appendChild(link);
-
-                // Trigger a click event on the anchor element
-                link.click();
-
-                // Remove the anchor element from the document body
-                document.body.removeChild(link);
-
-                resolve(screenshotUrl);
+            chrome.tabs.captureVisibleTab({format: "png"}, function (screenshotUrl) {
+                // Get the URL of the current tab
+                chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                    const pageUrl = tabs[0].url;
+    
+                    // Store both screenshotUrl and pageUrl in localStorage
+                    localStorage.setItem("screenshotUrl", screenshotUrl);
+                    localStorage.setItem("pageUrl", pageUrl);
+    
+                    resolve(screenshotUrl);
+                });
             });
         });
     }
-
-
+    
     document.getElementById("captureBtn").addEventListener("click", function () {
-        console.log("clicked");
         takeScreenshot();
     });
 });
