@@ -1,4 +1,8 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
+
+    const toggleButton = document.getElementById("enableButton");
+
+
     // Function to display the screenshot if available in local storage
     function displayScreenshot() {
         // Check if the image URL is available in local storage
@@ -6,7 +10,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (screenshotUrl) {
             console.log("Screenshot URL:", screenshotUrl);
-            
 
             // Create an image element
             // const img = document.createElement("img");
@@ -17,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
             console.log(img);
 
             // Set the onload event for the image
-            img.onload = function() {
+            img.onload = function () {
                 console.log("Image loaded successfully");
                 // Append the image to the imageContainer div
                 const imageContainer = document.getElementById("imageContainer");
@@ -29,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
             };
 
             // Set error handler for the image
-            img.onerror = function() {
+            img.onerror = function () {
                 console.error("Error loading image:", screenshotUrl);
             };
         } else {
@@ -48,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const postButton = document.getElementById("postButton");
 
     // Add event listener for post button click
-    postButton.addEventListener('click', function(event) {
+    postButton.addEventListener('click', function (event) {
         // Get the image name and description
         const imageDescription = imageDescriptionInput.value;
 
@@ -57,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Retrieve the pageUrl from localStorage
         // const pageUrl = localStorage.getItem("pageUrl");
-        const pageUrl = "anuj"
+        const pageUrl = "newUrl";
 
         // Construct the postData object
         const postData = {
@@ -82,29 +85,61 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify(postData)
         })
-        .then(response => {
-            console.log('Data sent successfully');
-            console.log("response: ", response);
-        })
-        .catch(error => {
-            console.error('Error sending data:', error);
-        });
+            .then(response => {
+                console.log('Data sent successfully');
+                console.log("response: ", response);
+
+                alert("Demo sent successfully")
+
+                // Hide the post button
+                postButton.style.display = 'none';
+
+                // Show the "Click Next Screenshot" button
+                const nextScreenshotButton = document.getElementById('nextScreenshotButton');
+                nextScreenshotButton.style.display = 'block';
+
+                nextScreenshotButton.addEventListener('click', function () {
+                    // Handle the click event for the next screenshot button
+                    // You can implement the logic for the next action here
+                    window.close();
+                });
+            })
+            .catch(error => {
+                console.error('Error sending data:', error);
+            });
     });
+
 
     let clickEnabled = false;
     let clickCount = 0;
-    
-    document.getElementById('enableButton').addEventListener('click', function() {
-        clickEnabled = true;
+
+    document.getElementById('enableButton').addEventListener('click', function () {
+        if (clickEnabled) clickEnabled = false;
+        else clickEnabled = true;
+        console.log(clickEnabled);
+        toggleButtonClass();
     });
-    
-    document.getElementById('image').addEventListener('click', function(event) {
+
+    function toggleButtonClass() {
+        if (clickEnabled) {
+            toggleButton.classList.remove('btn-outline-success');
+            toggleButton.classList.add('btn-success');
+        } else {
+            toggleButton.classList.remove('btn-success');
+            toggleButton.classList.add('btn-outline-success');
+        }
+        console.log(toggleButton);
+    }
+
+
+
+    document.getElementById('image').addEventListener('click', function (event) {
         if (clickEnabled) {
             clickCount++;
             const imageRect = event.target.getBoundingClientRect();
             const offsetX = event.clientX - imageRect.left + 10;
-            const offsetY = event.clientY - imageRect.top - 730;
-    
+            const offsetY = event.clientY - imageRect.top - 710;
+
             const imageWrapper = document.getElementById('imageWrapper');
 
             const circle = document.createElement('div');
@@ -114,12 +149,6 @@ document.addEventListener("DOMContentLoaded", function() {
             circle.style.top = offsetY + 'px';
             imageWrapper.appendChild(circle);
 
-            const inputContainer = document.createElement('div');
-            inputContainer.classList.add('inputContainer');
-            inputContainer.style.left = (offsetX + 0) + 'px';
-            inputContainer.style.top = (offsetY + 0) + 'px';
-
-            imageWrapper.appendChild(inputContainer);
 
             // Update the sidebar content
             const sidebar = document.querySelector('.sidebar');
@@ -146,6 +175,5 @@ document.addEventListener("DOMContentLoaded", function() {
             sidebar.appendChild(inputGroup);
         }
     });
-    
 
 });
